@@ -17,11 +17,6 @@ def InverteLinhas(l1, l2):
     matriz.remove(matriz[l1])
     matriz.insert(l2, linhaAntiga)
 
-# Somar Linha(l1) com linha(l2):
-def SomarLinha(l1, l2):
-    for cont in range(quantColunas):
-        matriz[l2][cont] = round((matriz[l2][cont] + matriz[l1][cont]), 1)
-
 # Multiplicar linha(l) por um valor:
 def MultLinha(l, valor):
     for cont in range(quantColunas):
@@ -34,7 +29,7 @@ def MultLinhaSoma(l1, l2, valor):
 
 # Aplicando Eliminação de Gauss:
 def CalculoEscala(linha, coluna):
-    # Se pivor for 0, procuar próxima linha diferente de 0 e fazer troca
+    ## Se pivor for 0, procuar próxima linha diferente de 0 e fazer troca
     if (matriz[linha][coluna] == 0):
         contLinha = linha + 1 
         while contLinha < quantLinha:
@@ -44,11 +39,11 @@ def CalculoEscala(linha, coluna):
                 break
             contLinha += 1
     
-    # Pivor for igual maior que 1 ou menor, Dividir multiplicar pivor por (1/pivor) para transformar em 1
+    ## Pivor for igual maior que 1 ou menor, Dividir multiplicar pivor por (1/pivor) para transformar em 1
     if ((matriz[linha][coluna] < 1 or matriz[linha][coluna] > 1) and matriz[linha][coluna] != 0):
         MultLinha(linha, 1/matriz[linha][coluna])
         
-    # Pivor for igual a 1 ou -1, converter -1 para 1 e zerar colunas acima e abaixo
+    ## Pivor for igual a 1 ou -1, converter -1 para 1 e zerar colunas acima e abaixo
     if ((matriz[linha][coluna] == 1 or matriz[linha][coluna] == -1)):
         if (matriz[linha][coluna] == -1):
             MultLinha(linha, -1)
@@ -59,7 +54,7 @@ def CalculoEscala(linha, coluna):
                     MultLinhaSoma(linha, contLinha, (-1 * matriz[contLinha][coluna]))
             contLinha += 1
     
-# Organizar
+# Organizar linhas por quantidade de zeros ate o primeiro não nulo da linha
 def OrganizarLinhas():
     quantZero = 0
     for m in matriz:
@@ -69,17 +64,17 @@ def OrganizarLinhas():
         if (quantZero == quantColunas):
             InverteLinhas(matriz.index(m), quantZero)
             quantZero = 0
-
-#Verificar se coluna e vazia
-def PrimeiraColunaVazia():
-    for i in matriz:
-        if (i[0] != 0):
-            return False
-    return True
            
 # Escalonar matriz:
 def EscalonarLinha():
-    colunaNula = PrimeiraColunaVazia()
+    ## Verificar se 1º Coluna é vazia
+    for i in matriz:
+        if (i[0] != 0):
+            colunaNula = False
+        else:
+            colunaNula = True
+
+    ## Efetuar o escalonamento por pivor
     OrganizarLinhas()
     for contLinha in range(quantLinha):
         if (colunaNula):
@@ -92,8 +87,8 @@ def EscalonarLinha():
                 CalculoEscala(contLinha, contLinha)
     
 # Para criação desse programa foi usado o metodo Eliminação de Gauss para criar a versao escada da matriz
-# Começo do codigo:
 
+# Começo do codigo:
 matriz = []
 quantLinha = int(input("Digite a quantidade de linhas da matriz:"))
 quantColunas = int(input("Digite a quantidade de colunas da matriz:"))
