@@ -1,8 +1,3 @@
-# Print Matriz:
-def PrintarMatriz():
-    for l in matriz:
-        print(l)
-        
 # Criar Matriz:
 def CriarMatriz():
     for linha in range(quantLinha):
@@ -10,6 +5,28 @@ def CriarMatriz():
         for coluna in range(quantColunas):
             lmatriz.append(float(input(f"Valor da linha: {linha + 1} coluna: {coluna + 1}: ")))
         matriz.append(lmatriz)
+
+# Print Matriz:
+def PrintarMatriz():
+    for i in range(quantLinha):
+        primeiroDaLinha = True
+        for j in range(quantColunas):
+            if (matriz[i][j] == 0):
+                    matriz[i][j] = matriz[i][j] + 0
+            if (j == (quantColunas - 1)):
+                print("%.1f ]" % matriz[i][j])
+            else:
+                if (primeiroDaLinha):
+                    if(matriz[i][j] < 0):
+                        print("[%.1f," % matriz[i][j], end = " ")
+                    else:
+                        print("[ %.1f," % matriz[i][j], end = "  ")
+                    primeiroDaLinha = False
+                else:
+                    if (matriz[i][j+1] < 0 and primeiroDaLinha == False):
+                        print("%.1f," % matriz[i][j], end = " ")
+                    else:
+                        print("%.1f," % matriz[i][j], end = "  ")
     
 # Mudar posição da linha(l1) pela linha(l2):
 def InverteLinhas(l1, l2):
@@ -49,44 +66,43 @@ def CalculoEscala(linha, coluna):
             MultLinha(linha, -1)
         contLinha = 0
         while contLinha < quantLinha:
-            if (contLinha != coluna):
+            if (contLinha != linha):
                 if (matriz[contLinha][coluna] != 0):
                     MultLinhaSoma(linha, contLinha, (-1 * matriz[contLinha][coluna]))
             contLinha += 1
     
 # Organizar linhas por quantidade de zeros ate o primeiro não nulo da linha
 def OrganizarLinhas():
-    quantZero = 0
     for m in matriz:
+        quantZero = 0
         for n in m:
             if (n == 0):
                 quantZero += 1
         if (quantZero == quantColunas):
             InverteLinhas(matriz.index(m), quantZero)
-            quantZero = 0
-           
-# Escalonar matriz:
+            
+# Reduzir matriz a forma escada:
 def EscalonarLinha():
-    ## Verificar se 1º Coluna é vazia
-    for i in matriz:
-        if (i[0] != 0):
-            colunaNula = False
-        else:
-            colunaNula = True
-
-    ## Efetuar o escalonamento por pivor
-    OrganizarLinhas()
+    contColuna = 0
     for contLinha in range(quantLinha):
-        if (colunaNula):
-            if (contLinha < quantLinha):
-                CalculoEscala(contLinha, contLinha)
-            else:
-                CalculoEscala(contLinha, contLinha + 1)
-        else:
-            if (contLinha < quantColunas):
-                CalculoEscala(contLinha, contLinha)
-    
-# Para criação desse programa foi usado o metodo Eliminação de Gauss para criar a versao escada da matriz
+        contLoopColuna = contLinha
+        quantZero = 0
+        contVerificarZero = 0
+        for i in matriz:
+            if (i[contVerificarZero] == 0):
+                quantZero += 1
+        contVerificarZero += 1
+        if (quantZero == quantLinha):
+            while contLoopColuna < quantColunas:
+                if (matriz[contLinha][contLoopColuna] == 0):
+                    contColuna += 1
+                else:
+                    break
+                contLoopColuna += 1
+        if (contLinha < quantColunas):
+            CalculoEscala(contLinha, contColuna)
+        contColuna += 1
+        OrganizarLinhas()
 
 # Começo do codigo:
 matriz = []
@@ -94,8 +110,8 @@ quantLinha = int(input("Digite a quantidade de linhas da matriz:"))
 quantColunas = int(input("Digite a quantidade de colunas da matriz:"))
 
 CriarMatriz()
-print("\n----- Matriz Normal ----")
+print(f"{(2 * quantColunas) * '-'} Matriz Normal {(2 * quantColunas) * '-'}")
 PrintarMatriz()
 EscalonarLinha()
-print("\n---- Matriz Escada ----")
+print(f"{(2 * quantColunas) * '-'} Matriz Escada {(2 * quantColunas) * '-'}")
 PrintarMatriz()
